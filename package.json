@@ -1,15 +1,12 @@
 {
-  "name": "wordlesolver",
+  "name": "wordle-solver",
   "version": "1.0.0",
-  "description": "",
-  "license": "ISC",
-  "author": "",
   "type": "module",
-  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "trial": "node scripts/run-trials.mjs"
   },
   "dependencies": {
-    "puppeteer": "^25.11.0"
+    "puppeteer": "^23.0.0"
   }
 }
