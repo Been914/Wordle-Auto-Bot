@@ -25,13 +25,14 @@ export async function openGame(browser) {
             .setTimeout(5000)
             .click();
     } catch {
-        console.log('No cookie-consent banner appeared within 5s, continuing.');
+        console.log('Cookie banner not located, continuing');
     }
 
     return page;
 }
 
 export async function playOneGame(page, words, { maxGuesses = 6 } = {}) {
+    console.log("starting one game")
     for (let i = 0; i < maxGuesses; i++) {
         await new Promise(resolve => setTimeout(resolve, 1500));
 
@@ -42,7 +43,7 @@ export async function playOneGame(page, words, { maxGuesses = 6 } = {}) {
         if (word === null) {
             return { isOver: true, won: false, titleText: 'NO_CANDIDATES' };
         }
-
+        console.log("attempting word " + word)
         await page.keyboard.type(word);
         await page.keyboard.press('Enter');
     }
@@ -137,7 +138,7 @@ async function getConstraints(page) {
             }
         });
     }
-
+    console.log("correct letters: " + correct.filter((c) => c != null))
     return { correct, elsewhere, absent, elsewhereByPos };
 }
 

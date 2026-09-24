@@ -4,8 +4,11 @@ const GAME_COUNT = 10;
 const WIN_THRESHOLD = 7;
 
 const words = loadWords('words.txt');
+console.log('loaded words');
 const browser = await launchBrowser({ headless: true });
+console.log('loaded browser');
 const page = await openGame(browser);
+console.log('loaded page, starting game');
 
 const results = await playGames(page, words, GAME_COUNT);
 await browser.close();
