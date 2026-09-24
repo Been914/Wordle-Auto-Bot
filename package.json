@@ -7,6 +7,6 @@
     "trial": "node scripts/run-trials.mjs"
   },
   "dependencies": {
-    "puppeteer": "^23.0.0"
+    "puppeteer": "^25.12.0"
   }
 }
