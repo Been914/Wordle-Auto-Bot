@@ -1,7 +1,7 @@
 import { loadWords, launchBrowser, openGame, playGames } from '../src/solver.mjs';
 
-const GAME_COUNT = Number(process.env.GAME_COUNT ?? 10);
-const WIN_THRESHOLD = Number(process.env.WIN_THRESHOLD ?? 7);
+const GAME_COUNT = 10;
+const WIN_THRESHOLD = 7;
 
 const words = loadWords('words.txt');
 const browser = await launchBrowser({ headless: true });

@@ -9,8 +9,6 @@ export function loadWords(path = 'words.txt') {
 export async function launchBrowser(opts = {}) {
     return puppeteer.launch({
         headless: true,
-        // Needed on GitHub Actions runners: Chrome refuses to start as root
-        // without --no-sandbox, and CI containers often have a tiny /dev/shm.
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
         ...opts,
     });
@@ -21,12 +19,18 @@ export async function openGame(browser) {
     await page.goto('https://wordler.org/wordle-unlimited');
     await page.setViewport({ width: 1080, height: 1024 });
     await new Promise(resolve => setTimeout(resolve, 1000));
-    await page.locator('::-p-aria([name="Reject All"][role="button"])').click();
+
+    try {
+        await page.locator('::-p-aria([name="Reject All"][role="button"])')
+            .setTimeout(5000)
+            .click();
+    } catch {
+        console.log('No cookie-consent banner appeared within 5s, continuing.');
+    }
+
     return page;
 }
 
-// Plays a single game to completion (win, loss, or run out of candidate words).
-// Returns { isOver, won, titleText }.
 export async function playOneGame(page, words, { maxGuesses = 6 } = {}) {
     for (let i = 0; i < maxGuesses; i++) {
         await new Promise(resolve => setTimeout(resolve, 1500));
@@ -36,8 +40,6 @@ export async function playOneGame(page, words, { maxGuesses = 6 } = {}) {
 
         const word = await getWord(page, words);
         if (word === null) {
-            // Word list exhausted before the modal appeared - count it as a loss
-            // rather than hanging, so a trial run can never stall indefinitely.
             return { isOver: true, won: false, titleText: 'NO_CANDIDATES' };
         }
 
