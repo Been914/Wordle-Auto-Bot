@@ -112,6 +112,7 @@ async function getBoardState(page) {
 
 async function getCompletedRows(page) {
     const board = await getBoardState(page);
+    console.log(board[0])
     return board.filter(row => row.length > 0 && row.every(cell => cell.status !== 'empty'));
 }
 
