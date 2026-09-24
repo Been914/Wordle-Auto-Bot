@@ -16,8 +16,9 @@ export async function launchBrowser(opts = {}) {
 
 export async function openGame(browser) {
     const page = await browser.newPage();
-    await page.goto('https://wordler.org/wordle-unlimited');
+
     await page.setViewport({ width: 1080, height: 1024 });
+    await page.goto('https://wordler.org/wordle-unlimited');
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     try {
@@ -26,6 +27,16 @@ export async function openGame(browser) {
             .click();
     } catch {
         console.log('Cookie banner not located, continuing');
+    }
+
+    try {
+        await page.waitForSelector('.Game > .row', { timeout: 15000 });
+    } catch {
+        console.log('Board did not appear within 15s - dumping debug info.');
+        await page.screenshot({ path: 'debug-board-missing.png' }).catch(() => {});
+        const html = await page.content().catch(() => '');
+        fs.writeFileSync('debug-board-missing.html', html);
+        throw new Error('Board selector .Game > .row never appeared - see debug-board-missing.png/html');
     }
 
     return page;

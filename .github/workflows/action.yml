@@ -38,4 +38,17 @@ jobs:
             libgtk-3-0t64 fonts-liberation
 
       - name: Run solver trials (headless)
+        env:
+          GAME_COUNT: ${{ inputs.games || '10' }}
+          WIN_THRESHOLD: ${{ inputs.threshold || '7' }}
         run: node scripts/run-trials.mjs
+
+      - name: Upload debug artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-board-missing
+          path: |
+            debug-board-missing.png
+            debug-board-missing.html
+          if-no-files-found: ignore
